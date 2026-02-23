@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#87CEEB,#ffffff);
+}
+
+.container{
+max-width:520px;
+margin:20px auto;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+h2{
+text-align:center;
+color:#0b5ed7;
+margin-bottom:10px;
+}
+
+.section-title{
+margin-top:15px;
+font-weight:bold;
+color:#0b5ed7;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:6px 0;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#0b5ed7;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#084298;
+}
+
+.item-row{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+}
+
+.total-box{
+background:#e7f1ff;
+padding:12px;
+border-radius:8px;
+text-align:center;
+margin-top:10px;
+font-size:18px;
+font-weight:bold;
+color:#0b5ed7;
+}
+
+.footer{
+text-align:center;
+font-size:12px;
+margin-top:15px;
+color:#555;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🧾 Moms Kitchen Billing</h2>
+
+<input id="name" placeholder="Customer Name">
+<input id="phone" placeholder="Phone Number">
+
+<div class="section-title">Select Category</div>
+<select id="category" onchange="loadItems()">
+<option value="">Select Category</option>
+<option value="food">Food</option>
+<option value="beverages">Beverages</option>
+<option value="cigarette">Cigarettes</option>
+</select>
+
+<div class="section-title">Select Item</div>
+<select id="itemName" onchange="setPrice()">
+<option>Select Item</option>
+</select>
+
+<input id="qty" type="number" placeholder="Quantity">
+<input id="price" type="number" placeholder="Price">
+
+<button onclick="addItem()">+ Add Item</button>
+
+<div id="items"></div>
+
+<div class="total-box">
+Total: ₹ <span id="total">0</span>
+</div>
+
+<button onclick="submitOrder()">Save Order</button>
+
+<p id="msg" style="text-align:center;font-weight:bold;"></p>
+
+<div class="footer">
+Powered by Kavish Informatics
+</div>
+
+</div>
+
+
+<script>
+
+// ======= EDIT YOUR SHOP ITEMS HERE =======
+const menu = {
+
+food:[
+{name:"Sandwich",price:50},
+{name:"Burger",price:80},
+{name:"Maggi",price:40}
+],
+
+beverages:[
+{name:"Tea",price:10},
+{name:"Coffee",price:20},
+{name:"Cold Drink",price:40}
+],
+
+cigarette:[
+{name:"Gold Flake",price:20},
+{name:"Classic",price:23},
+{name:"Marlboro",price:25}
+]
+
+};
+// ==========================================
+
+
+let cart=[];
+
+
+function loadItems(){
+const cat=document.getElementById("category").value;
+const itemSelect=document.getElementById("itemName");
+itemSelect.innerHTML="<option>Select Item</option>";
+
+if(!menu[cat]) return;
+
+menu[cat].forEach(item=>{
+itemSelect.innerHTML+=`<option value="${item.name}">${item.name}</option>`;
+});
+}
+
+
+function setPrice(){
+const cat=document.getElementById("category").value;
+const name=document.getElementById("itemName").value;
+const item=menu[cat].find(i=>i.name===name);
+if(item){
+document.getElementById("price").value=item.price;
+}
+}
+
+
+function addItem(){
+const name=document.getElementById("itemName").value;
+const qty=Number(document.getElementById("qty").value);
+const price=Number(document.getElementById("price").value);
+
+if(!name || !qty || !price){
+alert("Select item & quantity");
+return;
+}
+
+cart.push({name,qty,price});
+document.getElementById("qty").value="";
+renderItems();
+}
+
+
+function renderItems(){
+const list=document.getElementById("items");
+list.innerHTML="";
+let total=0;
+
+cart.forEach(item=>{
+total+=item.qty*item.price;
+list.innerHTML+=`
+<div class="item-row">
+<span>${item.name} (${item.qty})</span>
+<span>₹${item.qty*item.price}</span>
+</div>`;
+});
+
+document.getElementById("total").innerText=total;
+}
+
+
+function submitOrder(){
+const name=document.getElementById("name").value;
+const phone=document.getElementById("phone").value;
+
+if(!name || !phone || cart.length===0){
+alert("Enter customer details & add items");
+return;
+}
+
+const data={name,phone,items:cart};
+
+google.script.run.withSuccessHandler(res=>{
+document.getElementById("msg").innerText=res;
+cart=[];
+renderItems();
+document.getElementById("name").value="";
+document.getElementById("phone").value="";
+}).saveOrder(data);
+}
+
+</script>
+
+</body>
+</html>
