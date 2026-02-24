@@ -273,17 +273,36 @@ return;
 
 const data={name,phone,items:cart};
 
-google.script.run.withSuccessHandler(res=>{
-document.getElementById("msg").innerText=res;
+const API_URL = "PASTE_YOUR_EXEC_URL";
+
+async function submitOrder(){
+
+const data = {
+  action:"saveOrder",
+  name:document.getElementById("name").value,
+  phone:document.getElementById("phone").value,
+  items:cart
+};
+
+await fetch(API_URL,{
+  method:"POST",
+  body:JSON.stringify(data)
+});
+
+alert("Order Saved!");
 cart=[];
 renderItems();
-document.getElementById("name").value="";
-document.getElementById("phone").value="";
-}).saveOrder(data);
 }
 
-function goDashboard(){
-  window.location.href = "?page=dashboard";
+async function showTodayTotal(){
+
+const res = await fetch(API_URL,{
+  method:"POST",
+  body:JSON.stringify({action:"todayTotal"})
+});
+
+const data = await res.json();
+alert("Today's Total: ₹ " + data.total);
 }
 </script>
 
