@@ -98,8 +98,10 @@ color:#555;
 <div class="section-title">Select Category</div>
 <select id="category" onchange="loadItems()">
 <option value="">Select Category</option>
-<option value="food">Food</option>
-<option value="beverages">Beverages</option>
+<option value="food">Special Food</option>
+<option value="beverages">Tea & Coffee</option>
+<option value="Drinks">Drinks & Shakes</option>
+<option value="Snacks">Snacks & Biscuit</option>
 <option value="cigarette">Cigarettes</option>
 </select>
 
@@ -124,7 +126,7 @@ Total: ₹ <span id="total">0</span>
 <p id="msg" style="text-align:center;font-weight:bold;"></p>
 
 <div class="footer">
-Powered by Kavish Informatics
+Powered by Royal Tomar
 </div>
 
 </div>
@@ -136,15 +138,58 @@ Powered by Kavish Informatics
 const menu = {
 
 food:[
-{name:"Sandwich",price:50},
-{name:"Burger",price:80},
-{name:"Maggi",price:40}
+{name:"Aloo Paties",price:20},
+{name:"Sandwich",price:20},
+{name:"Vada Pav",price:30},
+{name:"Fatafat Bhel Chat",price:25},
+{name:"Kurkure Chat",price:25},
+{name:"Aloo Tikki",price:100},
+{name:"Veg Double Masala Maggi",price:60}
 ],
 
 beverages:[
-{name:"Tea",price:10},
-{name:"Coffee",price:20},
-{name:"Cold Drink",price:40}
+{name:"Milk Tea",price:15},
+{name:"Black Tea",price:25},
+{name:"Hot Coffee",price:25},
+{name:"Cold Coffee",price:50}
+],
+
+Drinks:[
+{name:"Lahori Jeera",price:10},
+{name:"Amul Kesar Milk",price:20},
+{name:"Real Mixed Fruit",price:20},
+{name:"Soft Drink 250 ML",price:20},
+{name:"Diet Coke",price:25},
+{name:"Coconut Water",price:50},
+{name:"Lemonade Drink",price:50},
+{name:"7UP Nimbooz",price:20},
+],
+
+Snacks:[
+{name:"Blue Lays",price:10},
+{name:"Green Lays",price:10},
+{name:"Yellow Lays",price:10},
+{name:"KurKure",price:10},
+{name:"Fatafat Bhel",price:10},
+{name:"Punjabi Tadka",price:10},
+{name:"Diet Mixture",price:10},
+{name:"Nut Crackers",price:10},
+{name:"Gup Shup",price:10},
+{name:"Salted Peenut",price:10},
+{name:"Aloo Bhujia",price:10},
+{name:"Besan Bhujia",price:10},
+{name:"Navratan",price:10},
+{name:"Nimbus Masala",price:10},
+{name:"Palak Sev",price:10},
+{name:"MoonDal",price:10},
+{name:"Good Day",price:10},
+{name:"Moms Magic",price:10},
+{name:"Marry Gold",price:10},
+{name:"Coconut ",price:10},
+{name:"Jim Jam",price:10},
+{name:"Parle-G",price:10},
+{name:"Butter Delight",price:10},
+
 ],
 
 cigarette:[
@@ -237,6 +282,9 @@ document.getElementById("phone").value="";
 }).saveOrder(data);
 }
 
+function goDashboard(){
+  window.location.href = "?page=dashboard";
+}
 </script>
 
 </body>
