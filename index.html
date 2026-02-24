@@ -131,10 +131,14 @@ Powered by Royal Tomar
 
 </div>
 
-
 <script>
 
-// ======= EDIT YOUR SHOP ITEMS HERE =======
+// ================== GOOGLE WEB APP URL ==================
+const API_URL = "https://script.google.com/macros/s/AKfycby5uXI8-49j94vySzDDbTPzzaITz1LXTjywBswk2EYurjV3UMdIj3tciBsU7d2_q1TkZQ/exec";
+// =========================================================
+
+
+// ======= YOUR SHOP ITEMS =======
 const menu = {
 
 food:[
@@ -162,7 +166,7 @@ Drinks:[
 {name:"Diet Coke",price:25},
 {name:"Coconut Water",price:50},
 {name:"Lemonade Drink",price:50},
-{name:"7UP Nimbooz",price:20},
+{name:"7UP Nimbooz",price:20}
 ],
 
 Snacks:[
@@ -175,7 +179,7 @@ Snacks:[
 {name:"Diet Mixture",price:10},
 {name:"Nut Crackers",price:10},
 {name:"Gup Shup",price:10},
-{name:"Salted Peenut",price:10},
+{name:"Salted Peanut",price:10},
 {name:"Aloo Bhujia",price:10},
 {name:"Besan Bhujia",price:10},
 {name:"Navratan",price:10},
@@ -185,11 +189,10 @@ Snacks:[
 {name:"Good Day",price:10},
 {name:"Moms Magic",price:10},
 {name:"Marry Gold",price:10},
-{name:"Coconut ",price:10},
+{name:"Coconut Biscuit",price:10},
 {name:"Jim Jam",price:10},
 {name:"Parle-G",price:10},
-{name:"Butter Delight",price:10},
-
+{name:"Butter Delight",price:10}
 ],
 
 cigarette:[
@@ -199,39 +202,45 @@ cigarette:[
 ]
 
 };
-// ==========================================
+
+let cart = [];
 
 
-let cart=[];
-
-
+// ===== LOAD ITEMS =====
 function loadItems(){
-const cat=document.getElementById("category").value;
-const itemSelect=document.getElementById("itemName");
-itemSelect.innerHTML="<option>Select Item</option>";
+const cat = document.getElementById("category").value;
+const itemSelect = document.getElementById("itemName");
+
+itemSelect.innerHTML = "<option value=''>Select Item</option>";
 
 if(!menu[cat]) return;
 
 menu[cat].forEach(item=>{
-itemSelect.innerHTML+=`<option value="${item.name}">${item.name}</option>`;
+itemSelect.innerHTML += `<option value="${item.name}">${item.name}</option>`;
 });
 }
 
 
+// ===== AUTO PRICE =====
 function setPrice(){
-const cat=document.getElementById("category").value;
-const name=document.getElementById("itemName").value;
-const item=menu[cat].find(i=>i.name===name);
+const cat = document.getElementById("category").value;
+const name = document.getElementById("itemName").value;
+
+if(!menu[cat]) return;
+
+const item = menu[cat].find(i=>i.name===name);
 if(item){
-document.getElementById("price").value=item.price;
+document.getElementById("price").value = item.price;
 }
 }
 
 
+// ===== ADD ITEM =====
 function addItem(){
-const name=document.getElementById("itemName").value;
-const qty=Number(document.getElementById("qty").value);
-const price=Number(document.getElementById("price").value);
+
+const name = document.getElementById("itemName").value;
+const qty = Number(document.getElementById("qty").value);
+const price = Number(document.getElementById("price").value);
 
 if(!name || !qty || !price){
 alert("Select item & quantity");
@@ -244,67 +253,80 @@ renderItems();
 }
 
 
+// ===== RENDER CART =====
 function renderItems(){
-const list=document.getElementById("items");
-list.innerHTML="";
-let total=0;
+const list = document.getElementById("items");
+list.innerHTML = "";
+let total = 0;
 
 cart.forEach(item=>{
-total+=item.qty*item.price;
-list.innerHTML+=`
+total += item.qty * item.price;
+
+list.innerHTML += `
 <div class="item-row">
 <span>${item.name} (${item.qty})</span>
-<span>₹${item.qty*item.price}</span>
+<span>₹${item.qty * item.price}</span>
 </div>`;
 });
 
-document.getElementById("total").innerText=total;
+document.getElementById("total").innerText = total;
 }
 
 
-function submitOrder(){
-const name=document.getElementById("name").value;
-const phone=document.getElementById("phone").value;
+// ===== SAVE ORDER =====
+async function submitOrder(){
+
+const name = document.getElementById("name").value;
+const phone = document.getElementById("phone").value;
 
 if(!name || !phone || cart.length===0){
 alert("Enter customer details & add items");
 return;
 }
 
-const data={name,phone,items:cart};
-
-const API_URL = "PASTE_YOUR_EXEC_URL";
-
-async function submitOrder(){
-
 const data = {
-  action:"saveOrder",
-  name:document.getElementById("name").value,
-  phone:document.getElementById("phone").value,
-  items:cart
+action:"saveOrder",
+name:name,
+phone:phone,
+items:cart
 };
 
+try{
 await fetch(API_URL,{
-  method:"POST",
-  body:JSON.stringify(data)
+method:"POST",
+body:JSON.stringify(data)
 });
 
-alert("Order Saved!");
+alert("Order Saved Successfully!");
+
 cart=[];
 renderItems();
+document.getElementById("name").value="";
+document.getElementById("phone").value="";
+
+}catch(err){
+alert("Error saving order");
+console.log(err);
 }
 
+}
+
+
+// ===== TODAY TOTAL =====
 async function showTodayTotal(){
 
 const res = await fetch(API_URL,{
-  method:"POST",
-  body:JSON.stringify({action:"todayTotal"})
+method:"POST",
+body:JSON.stringify({action:"todayTotal"})
 });
 
 const data = await res.json();
 alert("Today's Total: ₹ " + data.total);
+
 }
+
 </script>
+
 
 </body>
 </html>
