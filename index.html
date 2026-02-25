@@ -3,6 +3,8 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Moms Kitchen POS</title>
+
 <style>
 
 body{
@@ -107,7 +109,7 @@ color:#555;
 
 <div class="section-title">Select Item</div>
 <select id="itemName" onchange="setPrice()">
-<option>Select Item</option>
+<option value="">Select Item</option>
 </select>
 
 <input id="qty" type="number" placeholder="Quantity">
@@ -122,6 +124,7 @@ Total: ₹ <span id="total">0</span>
 </div>
 
 <button onclick="submitOrder()">Save Order</button>
+<button onclick="showTodayTotal()">🔥 Today Total Sale</button>
 
 <p id="msg" style="text-align:center;font-weight:bold;"></p>
 
@@ -133,113 +136,79 @@ Powered by Royal Tomar
 
 <script>
 
-// ================== GOOGLE WEB APP URL ==================
-const API_URL = "https://script.google.com/macros/s/AKfycbxZZJVTZxNIye3AOxTLcRrt4eoSLxCkbQNOjYFuzSpeDjuQ4pWVonT4-M5SgTYT4nxTnA/exec";
-// =========================================================
+// ====== PASTE YOUR LATEST DEPLOYED WEB APP URL ======
+const API_URL = "PASTE_YOUR_LATEST_EXEC_URL_HERE";
+// =====================================================
 
-// ======= YOUR SHOP ITEMS =======
+
+// ===== MENU =====
 const menu = {
 
 food:[
 {name:"Aloo Paties",price:20},
 {name:"Sandwich",price:20},
-{name:"Vada Pav",price:30},
-{name:"Fatafat Bhel Chat",price:25},
-{name:"Kurkure Chat",price:25},
-{name:"Aloo Tikki",price:100},
-{name:"Veg Double Masala Maggi",price:60}
+{name:"Vada Pav",price:30}
 ],
 
 beverages:[
 {name:"Milk Tea",price:15},
-{name:"Black Tea",price:25},
-{name:"Hot Coffee",price:25},
 {name:"Cold Coffee",price:50}
 ],
 
 Drinks:[
 {name:"Lahori Jeera",price:10},
-{name:"Amul Kesar Milk",price:20},
-{name:"Real Mixed Fruit",price:20},
-{name:"Soft Drink 250 ML",price:20},
-{name:"Diet Coke",price:25},
-{name:"Coconut Water",price:50},
-{name:"Lemonade Drink",price:50},
-{name:"7UP Nimbooz",price:20}
+{name:"Soft Drink 250 ML",price:20}
 ],
 
 Snacks:[
 {name:"Blue Lays",price:10},
-{name:"Green Lays",price:10},
-{name:"Yellow Lays",price:10},
-{name:"KurKure",price:10},
-{name:"Fatafat Bhel",price:10},
-{name:"Punjabi Tadka",price:10},
-{name:"Diet Mixture",price:10},
-{name:"Nut Crackers",price:10},
-{name:"Gup Shup",price:10},
-{name:"Salted Peanut",price:10},
-{name:"Aloo Bhujia",price:10},
-{name:"Besan Bhujia",price:10},
-{name:"Navratan",price:10},
-{name:"Nimbus Masala",price:10},
-{name:"Palak Sev",price:10},
-{name:"MoonDal",price:10},
-{name:"Good Day",price:10},
-{name:"Moms Magic",price:10},
-{name:"Marry Gold",price:10},
-{name:"Coconut Biscuit",price:10},
-{name:"Jim Jam",price:10},
-{name:"Parle-G",price:10},
-{name:"Butter Delight",price:10}
+{name:"Good Day",price:10}
 ],
 
 cigarette:[
 {name:"Gold Flake",price:20},
-{name:"Classic",price:23},
 {name:"Marlboro",price:25}
 ]
 
 };
 
-let cart = [];
+let cart=[];
 
 
-// ===== LOAD ITEMS =====
+// LOAD ITEMS
 function loadItems(){
-const cat = document.getElementById("category").value;
-const itemSelect = document.getElementById("itemName");
-
-itemSelect.innerHTML = "<option value=''>Select Item</option>";
+const cat=document.getElementById("category").value;
+const itemSelect=document.getElementById("itemName");
+itemSelect.innerHTML="<option value=''>Select Item</option>";
 
 if(!menu[cat]) return;
 
 menu[cat].forEach(item=>{
-itemSelect.innerHTML += `<option value="${item.name}">${item.name}</option>`;
+itemSelect.innerHTML+=`<option value="${item.name}">${item.name}</option>`;
 });
 }
 
 
-// ===== AUTO PRICE =====
+// AUTO PRICE
 function setPrice(){
-const cat = document.getElementById("category").value;
-const name = document.getElementById("itemName").value;
+const cat=document.getElementById("category").value;
+const name=document.getElementById("itemName").value;
 
 if(!menu[cat]) return;
 
-const item = menu[cat].find(i=>i.name===name);
+const item=menu[cat].find(i=>i.name===name);
 if(item){
-document.getElementById("price").value = item.price;
+document.getElementById("price").value=item.price;
 }
 }
 
 
-// ===== ADD ITEM =====
+// ADD ITEM
 function addItem(){
 
-const name = document.getElementById("itemName").value;
-const qty = Number(document.getElementById("qty").value);
-const price = Number(document.getElementById("price").value);
+const name=document.getElementById("itemName").value;
+const qty=Number(document.getElementById("qty").value);
+const price=Number(document.getElementById("price").value);
 
 if(!name || !qty || !price){
 alert("Select item & quantity");
@@ -252,38 +221,42 @@ renderItems();
 }
 
 
-// ===== RENDER CART =====
+// RENDER CART
 function renderItems(){
-const list = document.getElementById("items");
-list.innerHTML = "";
-let total = 0;
+const list=document.getElementById("items");
+list.innerHTML="";
+let total=0;
 
 cart.forEach(item=>{
-total += item.qty * item.price;
-
-list.innerHTML += `
+total+=item.qty*item.price;
+list.innerHTML+=`
 <div class="item-row">
 <span>${item.name} (${item.qty})</span>
-<span>₹${item.qty * item.price}</span>
+<span>₹${item.qty*item.price}</span>
 </div>`;
 });
 
-document.getElementById("total").innerText = total;
+document.getElementById("total").innerText=total;
 }
 
 
-// ===== SAVE ORDER =====
+// SAVE ORDER
 async function submitOrder(){
 
-const name = document.getElementById("name").value;
-const phone = document.getElementById("phone").value;
+if(!API_URL.includes("script.google.com")){
+alert("API URL missing ❌");
+return;
+}
+
+const name=document.getElementById("name").value;
+const phone=document.getElementById("phone").value;
 
 if(!name || !phone || cart.length===0){
 alert("Enter customer details & add items");
 return;
 }
 
-const data = {
+const data={
 action:"saveOrder",
 name:name,
 phone:phone,
@@ -291,41 +264,46 @@ items:cart
 };
 
 try{
-await fetch(API_URL,{
+
+const response=await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify(data)
 });
 
-alert("Order Saved Successfully!");
+const result=await response.text();
 
+if(result.includes("success")){
+alert("Order Saved Successfully ✅");
 cart=[];
 renderItems();
 document.getElementById("name").value="";
 document.getElementById("phone").value="";
+}else{
+alert("Server Error: "+result);
+}
 
 }catch(err){
-alert("Error saving order");
+alert("Connection Error ❌");
 console.log(err);
 }
 
 }
 
 
-// ===== TODAY TOTAL =====
+// TODAY TOTAL
 async function showTodayTotal(){
 
-const res = await fetch(API_URL,{
+const res=await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({action:"todayTotal"})
 });
 
-const data = await res.json();
-alert("Today's Total: ₹ " + data.total);
+const data=await res.json();
+alert("Today's Total: ₹ "+data.total);
 
 }
 
 </script>
-
 
 </body>
 </html>
