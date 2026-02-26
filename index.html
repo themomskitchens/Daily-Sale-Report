@@ -1,149 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moms Kitchen POS</title>
 
 <style>
-
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#87CEEB,#ffffff);
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  margin:0;
+  padding:10px;
+  color:#fff;
 }
 
 .container{
-max-width:520px;
-margin:20px auto;
-background:white;
-padding:25px;
-border-radius:15px;
-box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  max-width:500px;
+  margin:auto;
+  background:#ffffff10;
+  backdrop-filter:blur(10px);
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 0 15px rgba(0,0,0,0.5);
 }
 
 h2{
-text-align:center;
-color:#0b5ed7;
-margin-bottom:10px;
+  text-align:center;
+  margin-bottom:15px;
 }
 
-.section-title{
-margin-top:15px;
-font-weight:bold;
-color:#0b5ed7;
+input,select,button{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:none;
+  font-size:14px;
 }
 
-input,select{
-width:100%;
-padding:12px;
-margin:6px 0;
-border-radius:8px;
-border:1px solid #ccc;
-font-size:15px;
+input{
+  background:#fff;
+  color:#000;
+}
+
+select{
+  background:#fff;
+  color:#000;
 }
 
 button{
-width:100%;
-padding:12px;
-margin-top:10px;
-background:#0b5ed7;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
+  background:#00c6ff;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 button:hover{
-background:#084298;
+  background:#00e1ff;
 }
 
-.item-row{
-display:flex;
-justify-content:space-between;
-padding:8px 0;
-border-bottom:1px solid #eee;
-font-size:14px;
+table{
+  width:100%;
+  margin-top:10px;
+  border-collapse:collapse;
+  background:#fff;
+  color:#000;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:6px;
+  text-align:center;
+  font-size:13px;
+}
+
+th{
+  background:#00c6ff;
 }
 
 .total-box{
-background:#e7f1ff;
-padding:12px;
-border-radius:8px;
-text-align:center;
-margin-top:10px;
-font-size:18px;
-font-weight:bold;
-color:#0b5ed7;
+  text-align:right;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:10px;
 }
 
-.footer{
-text-align:center;
-font-size:12px;
-margin-top:15px;
-color:#555;
+.remove-btn{
+  background:red;
+  color:#fff;
+  padding:3px 6px;
+  border-radius:5px;
+  font-size:12px;
+  cursor:pointer;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="container">
+  <h2>MOMS KITCHEN POS</h2>
 
-<h2>🧾 Moms Kitchen Billing</h2>
+  <input type="text" id="customerName" placeholder="Customer Name">
+  <input type="tel" id="customerPhone" placeholder="Mobile Number">
 
-<input id="name" placeholder="Customer Name">
-<input id="phone" placeholder="Phone Number">
+  <select id="itemSelect"></select>
 
-<div class="section-title">Select Category</div>
-<select id="category" onchange="loadItems()">
-<option value="">Select Category</option>
-<option value="food">Special Food</option>
-<option value="beverages">Tea & Coffee</option>
-<option value="Drinks">Drinks & Shakes</option>
-<option value="Snacks">Snacks & Biscuit</option>
-<option value="cigarette">Cigarettes</option>
-</select>
+  <input type="number" id="qty" placeholder="Quantity" value="1">
 
-<div class="section-title">Select Item</div>
-<select id="itemName" onchange="setPrice()">
-<option value="">Select Item</option>
-</select>
+  <button onclick="addItem()">Add Item</button>
 
-<input id="qty" type="number" placeholder="Quantity">
-<input id="price" type="number" placeholder="Price">
+  <table id="cartTable">
+    <thead>
+      <tr>
+        <th style="width:35%">Item</th>
+        <th style="width:15%">Qty</th>
+        <th style="width:20%">Rate</th>
+        <th style="width:20%">Total</th>
+        <th style="width:10%">X</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<button onclick="addItem()">+ Add Item</button>
+  <div class="total-box">
+    Grand Total: ₹<span id="grandTotal">0</span>
+  </div>
 
-<div id="items"></div>
-
-<div class="total-box">
-Total: ₹ <span id="total">0</span>
+  <button onclick="submitOrder()">Submit Order</button>
 </div>
 
-<button onclick="submitOrder()">Save Order</button>
-<button onclick="showTodayTotal()">🔥 Today Total Sale</button>
-
-<p id="msg" style="text-align:center;font-weight:bold;"></p>
-
-<div class="footer">
-Powered by Royal Tomar
-</div>
-
-</div>
 
 <script>
 
-// ====== PASTE YOUR LATEST DEPLOYED WEB APP URL ======
-const API_URL = "https://script.google.com/macros/s/AKfycbzBR9Et70HYa5hbnIY5FbbG4tXPMPRkVxMt3DKGK1NQuuwwQFQpW9o-EIn4dzfxEk5X9g/exec";
-// =====================================================
-
-
-// ===== MENU =====
-<script>
-
+/************** MENU **************/
 const MENU = {
   food: [
     { name: "Aloo Paties", price: 20 },
@@ -154,14 +144,12 @@ const MENU = {
     { name: "Aloo Tikki", price: 100 },
     { name: "Veg Double Masala Maggi", price: 60 }
   ],
-
   beverages: [
     { name: "Milk Tea", price: 15 },
     { name: "Black Tea", price: 25 },
     { name: "Hot Coffee", price: 25 },
     { name: "Cold Coffee", price: 50 }
   ],
-
   drinks: [
     { name: "Lahori Jeera", price: 10 },
     { name: "Amul Kesar Milk", price: 20 },
@@ -172,7 +160,6 @@ const MENU = {
     { name: "Lemonade Drink", price: 50 },
     { name: "7UP Nimbooz", price: 20 }
   ],
-
   snacks: [
     { name: "Blue Lays", price: 10 },
     { name: "Green Lays", price: 10 },
@@ -198,7 +185,6 @@ const MENU = {
     { name: "Parle-G", price: 10 },
     { name: "Butter Delight", price: 10 }
   ],
-
   cigarette: [
     { name: "Gold Flake", price: 20 },
     { name: "Classic", price: 23 },
@@ -206,18 +192,19 @@ const MENU = {
   ]
 };
 
-function loadMenu() {
-  const select = document.getElementById("itemSelect");
 
-  Object.keys(MENU).forEach(category => {
+/************** LOAD MENU **************/
+function loadMenu(){
+  const select=document.getElementById("itemSelect");
 
-    const group = document.createElement("optgroup");
-    group.label = category.toUpperCase();
+  Object.keys(MENU).forEach(cat=>{
+    const group=document.createElement("optgroup");
+    group.label=cat.toUpperCase();
 
-    MENU[category].forEach(item => {
-      const option = document.createElement("option");
-      option.value = JSON.stringify(item);
-      option.textContent = `${item.name} - ₹${item.price}`;
+    MENU[cat].forEach(item=>{
+      const option=document.createElement("option");
+      option.value=JSON.stringify(item);
+      option.textContent=`${item.name} - ₹${item.price}`;
       group.appendChild(option);
     });
 
@@ -225,140 +212,60 @@ function loadMenu() {
   });
 }
 
-<select id="itemSelect"></select>
-  
-window.onload = loadMenu;
-
-</script>
+window.onload=loadMenu;
 
 let cart=[];
 
-// LOAD ITEMS
-function loadItems(){
-const cat=document.getElementById("category").value;
-const itemSelect=document.getElementById("itemName");
-itemSelect.innerHTML="<option value=''>Select Item</option>";
-
-if(!menu[cat]) return;
-
-menu[cat].forEach(item=>{
-itemSelect.innerHTML+=`<option value="${item.name}">${item.name}</option>`;
-});
-}
-
-
-// AUTO PRICE
-function setPrice(){
-const cat=document.getElementById("category").value;
-const name=document.getElementById("itemName").value;
-
-if(!menu[cat]) return;
-
-const item=menu[cat].find(i=>i.name===name);
-if(item){
-document.getElementById("price").value=item.price;
-}
-}
-
-
-// ADD ITEM
+/************** ADD ITEM **************/
 function addItem(){
+  const item=JSON.parse(document.getElementById("itemSelect").value);
+  const qty=parseInt(document.getElementById("qty").value);
 
-const name=document.getElementById("itemName").value;
-const qty=Number(document.getElementById("qty").value);
-const price=Number(document.getElementById("price").value);
+  if(!qty || qty<=0) return;
 
-if(!name || !qty || !price){
-alert("Select item & quantity");
-return;
+  cart.push({
+    name:item.name,
+    price:item.price,
+    qty:qty
+  });
+
+  renderCart();
 }
 
-cart.push({name,qty,price});
-document.getElementById("qty").value="";
-renderItems();
+/************** RENDER CART **************/
+function renderCart(){
+  const tbody=document.querySelector("#cartTable tbody");
+  tbody.innerHTML="";
+  let total=0;
+
+  cart.forEach((item,index)=>{
+    const row=document.createElement("tr");
+    const itemTotal=item.qty*item.price;
+    total+=itemTotal;
+
+    row.innerHTML=`
+      <td>${item.name}</td>
+      <td>${item.qty}</td>
+      <td>${item.price}</td>
+      <td>${itemTotal}</td>
+      <td><span class="remove-btn" onclick="removeItem(${index})">X</span></td>
+    `;
+
+    tbody.appendChild(row);
+  });
+
+  document.getElementById("grandTotal").innerText=total;
 }
 
-
-// RENDER CART
-function renderItems(){
-const list=document.getElementById("items");
-list.innerHTML="";
-let total=0;
-
-cart.forEach(item=>{
-total+=item.qty*item.price;
-list.innerHTML+=`
-<div class="item-row">
-<span>${item.name} (${item.qty})</span>
-<span>₹${item.qty*item.price}</span>
-</div>`;
-});
-
-document.getElementById("total").innerText=total;
+/************** REMOVE **************/
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
 }
 
-
-// SAVE ORDER
-async function submitOrder(){
-
-if(!API_URL.includes("script.google.com")){
-alert("API URL missing ❌");
-return;
-}
-
-const name=document.getElementById("name").value;
-const phone=document.getElementById("phone").value;
-
-if(!name || !phone || cart.length===0){
-alert("Enter customer details & add items");
-return;
-}
-
-const data={
-action:"saveOrder",
-name:name,
-phone:phone,
-items:cart
-};
-
-try{
-
-const response=await fetch(API_URL,{
-method:"POST",
-body:JSON.stringify(data)
-});
-
-const result=await response.text();
-
-if(result.includes("success")){
-alert("Order Saved Successfully ✅");
-cart=[];
-renderItems();
-document.getElementById("name").value="";
-document.getElementById("phone").value="";
-}else{
-alert("Server Error: "+result);
-}
-
-}catch(err){
-alert("Connection Error ❌");
-console.log(err);
-}
-
-}
-
-
-// TODAY TOTAL
-async function showTodayTotal(){
-
-const res=await fetch(API_URL,{
-method:"POST",
-body:JSON.stringify({action:"todayTotal"})
-});
-
-const data=await res.json();
-alert("Today's Total: ₹ "+data.total);
-
+/************** SUBMIT **************/
+function submitOrder(){
+  alert("Order Ready! Grand Total ₹"+document.getElementById("grandTotal").innerText);
 }
 
 </script>
