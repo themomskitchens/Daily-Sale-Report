@@ -142,34 +142,66 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzBR9Et70HYa5hbnIY5FbbG
 
 
 // ===== MENU =====
-const menu = {
+const MENU = {
+  food: [
+    { name: "Aloo Paties", price: 20 },
+    { name: "Sandwich", price: 20 },
+    { name: "Vada Pav", price: 30 },
+    { name: "Fatafat Bhel Chat", price: 25 },
+    { name: "Kurkure Chat", price: 25 },
+    { name: "Aloo Tikki", price: 100 },
+    { name: "Veg Double Masala Maggi", price: 60 }
+  ],
 
-food:[
-{name:"Aloo Paties",price:20},
-{name:"Sandwich",price:20},
-{name:"Vada Pav",price:30}
-],
+  beverages: [
+    { name: "Milk Tea", price: 15 },
+    { name: "Black Tea", price: 25 },
+    { name: "Hot Coffee", price: 25 },
+    { name: "Cold Coffee", price: 50 }
+  ],
 
-beverages:[
-{name:"Milk Tea",price:15},
-{name:"Cold Coffee",price:50}
-],
+  drinks: [
+    { name: "Lahori Jeera", price: 10 },
+    { name: "Amul Kesar Milk", price: 20 },
+    { name: "Real Mixed Fruit", price: 20 },
+    { name: "Soft Drink 250 ML", price: 20 },
+    { name: "Diet Coke", price: 25 },
+    { name: "Coconut Water", price: 50 },
+    { name: "Lemonade Drink", price: 50 },
+    { name: "7UP Nimbooz", price: 20 }
+  ],
 
-Drinks:[
-{name:"Lahori Jeera",price:10},
-{name:"Soft Drink 250 ML",price:20}
-],
+  snacks: [
+    { name: "Blue Lays", price: 10 },
+    { name: "Green Lays", price: 10 },
+    { name: "Yellow Lays", price: 10 },
+    { name: "KurKure", price: 10 },
+    { name: "Fatafat Bhel", price: 10 },
+    { name: "Punjabi Tadka", price: 10 },
+    { name: "Diet Mixture", price: 10 },
+    { name: "Nut Crackers", price: 10 },
+    { name: "Gup Shup", price: 10 },
+    { name: "Salted Peanut", price: 10 },
+    { name: "Aloo Bhujia", price: 10 },
+    { name: "Besan Bhujia", price: 10 },
+    { name: "Navratan", price: 10 },
+    { name: "Nimbus Masala", price: 10 },
+    { name: "Palak Sev", price: 10 },
+    { name: "MoonDal", price: 10 },
+    { name: "Good Day", price: 10 },
+    { name: "Moms Magic", price: 10 },
+    { name: "Marry Gold", price: 10 },
+    { name: "Coconut Biscuit", price: 10 },
+    { name: "Jim Jam", price: 10 },
+    { name: "Parle-G", price: 10 },
+    { name: "Butter Delight", price: 10 }
+  ],
 
-Snacks:[
-{name:"Blue Lays",price:10},
-{name:"Good Day",price:10}
-],
-
-cigarette:[
-{name:"Gold Flake",price:20},
-{name:"Marlboro",price:25}
-]
-
+  cigarette: [
+    { name: "Gold Flake", price: 20 },
+    { name: "Classic", price: 23 },
+    { name: "Marlboro", price: 25 }
+  ]
 };
 
 let cart=[];
