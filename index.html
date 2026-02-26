@@ -142,6 +142,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzBR9Et70HYa5hbnIY5FbbG
 
 
 // ===== MENU =====
+<script>
+
 const MENU = {
   food: [
     { name: "Aloo Paties", price: 20 },
@@ -204,8 +206,32 @@ const MENU = {
   ]
 };
 
-let cart=[];
+function loadMenu() {
+  const select = document.getElementById("itemSelect");
 
+  Object.keys(MENU).forEach(category => {
+
+    const group = document.createElement("optgroup");
+    group.label = category.toUpperCase();
+
+    MENU[category].forEach(item => {
+      const option = document.createElement("option");
+      option.value = JSON.stringify(item);
+      option.textContent = `${item.name} - ₹${item.price}`;
+      group.appendChild(option);
+    });
+
+    select.appendChild(group);
+  });
+}
+
+<select id="itemSelect"></select>
+  
+window.onload = loadMenu;
+
+</script>
+
+let cart=[];
 
 // LOAD ITEMS
 function loadItems(){
